@@ -1,9 +1,23 @@
 import cv2
 import pickle
 
-img = cv2.imread('carParkImg.png')
+width,height=107,48  #157-50  240-192
+posList=[]
+
+def mouseClick(events,x,y,flags,params):
+    if events == cv2.EVENT_LBUTTONDOWN:
+        posList.append((x,y))
+    if events == cv2.EVENT_RBUTTONDOWN: #to delete
+        for i,pos in enumerate(posList):
+            x1,y1=pos
+            if x1<x<x1+width and y1<y<y1+height:
+                posList.pop(i)
 
 while True:
-    cv2.rectangle(img,(100,100),(200,150),(255,0,255),2)
-    cv2.imshow("image",img)
-    cv2.waitKey(0)
+    img = cv2.imread('carParkImg.png')
+    for pos in posList:
+        cv2.rectangle(img,pos, (pos[0] + width,pos[1]+height), (255, 0, 255), 2)  # PurpleColor-One rectangle for one Parking Space
+
+    cv2.imshow("Image",img)
+    cv2.setMouseCallback("Image",mouseClick) #Detect Mouse Click
+    cv2.waitKey(1)
